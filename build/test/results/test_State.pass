@@ -1,0 +1,23 @@
+---
+:source:
+  :path: test
+  :file: test_State.c
+:successes:
+- :test: test_getButton_if_input_the_button_should_return_button_state
+  :line: 22
+  :message: ''
+- :test: test_turnLed_should_turn_on_or_off_for_selected_LED
+  :line: 31
+  :message: ''
+- :test: test_testing
+  :line: 40
+  :message: ''
+:failures: []
+:ignores: []
+:counts:
+  :total: 3
+  :passed: 3
+  :failed: 0
+  :ignored: 0
+:stdout:
+- ''
