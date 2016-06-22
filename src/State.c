@@ -1,6 +1,5 @@
 #include <stdio.h>
-#include <time.h>
-#include <dos.h>
+#include "Timer.h"
 #include "State.h"
 
 int getButton(Button bt){
@@ -22,23 +21,23 @@ void buttonAndLed(TaskState *ts){
     case RELEASED:
       if(getButton(ts->whichButton)== IS_PRESSED){
         turnLed(ts->whichLED,LED_ON);
-        ts->recordTime=clock();
+        // ts->recordTime=clock();
         ts->state=PRESSED_ON;
       }break;
     case PRESSED_ON:
       if(getButton(ts->whichButton)== NOT_PRESSED)
         ts->state=RELEASED_ON;
-      if((clock()-ts->recordTime)==ts->interval){
+      if(getTimer()==ts->interval){
         turnLed(ts->whichLED,LED_OFF);
-        ts->recordTime=clock();
+        // ts->recordTime=clock();
         ts->state=PRESSED_OFF;
       }break;
     case PRESSED_OFF:
       if(getButton(ts->whichButton)== NOT_PRESSED)
         ts->state=RELEASED_OFF;
-      if((clock()-ts->recordTime)==ts->interval){
+      if(getTimer()==ts->interval){
         turnLed(ts->whichLED,LED_ON);
-        ts->recordTime=clock();
+        // ts->recordTime=clock();
         ts->state=PRESSED_ON;
       }break;
     case RELEASED_ON:
@@ -46,18 +45,18 @@ void buttonAndLed(TaskState *ts){
         turnLed(ts->whichLED,LED_OFF);
         ts->state=TURNING_OFF;
       }
-      if((clock()-ts->recordTime)==ts->interval){
+      if(getTimer()==ts->interval){
         turnLed(ts->whichLED,LED_OFF);
-        ts->recordTime=clock();
+        // ts->recordTime=clock();
         ts->state=RELEASED_OFF;
       }break;
     case RELEASED_OFF:
       if(getButton(ts->whichButton)== IS_PRESSED){
         ts->state=TURNING_OFF;
       }
-      if((clock()-ts->recordTime)==ts->interval){
+      if(getTimer()==ts->interval){
         turnLed(ts->whichLED,LED_ON);
-        ts->recordTime=clock();
+        // ts->recordTime=clock();
         ts->state=RELEASED_ON;
       }break;
     case TURNING_OFF:

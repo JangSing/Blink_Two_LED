@@ -4,19 +4,28 @@
   :file: test_State.c
 :successes:
 - :test: test_getButton_if_input_the_button_should_return_button_state
-  :line: 22
+  :line: 24
   :message: ''
 - :test: test_turnLed_should_turn_on_or_off_for_selected_LED
-  :line: 31
+  :line: 33
   :message: ''
-- :test: test_testing
-  :line: 40
+- :test: test_state_RELEASE_when_button_pressed_should_on_LED_and_change_state
+  :line: 42
+  :message: ''
+- :test: test_state_RELEASE_when_button_not_pressed_should_do_nothing
+  :line: 60
+  :message: ''
+- :test: test_state_PRESSED_ON_when_button_not_pressed_should_change_state
+  :line: 78
+  :message: ''
+- :test: test_state_PRESSED_ON_when_timer_expired_should_turn_off_led_restart_timer_and_change_state
+  :line: 95
   :message: ''
 :failures: []
 :ignores: []
 :counts:
-  :total: 3
-  :passed: 3
+  :total: 6
+  :passed: 6
   :failed: 0
   :ignored: 0
 :stdout:

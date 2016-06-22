@@ -6,6 +6,7 @@
   Unity.CurrentTestName = #TestFunc; \
   Unity.CurrentTestLineNumber = TestLineNum; \
   Unity.NumberOfTests++; \
+  CMock_Init(); \
   if (TEST_PROTECT()) \
   { \
       setUp(); \
@@ -14,14 +15,18 @@
   if (TEST_PROTECT() && !TEST_IS_IGNORED) \
   { \
     tearDown(); \
+    CMock_Verify(); \
   } \
+  CMock_Destroy(); \
   UnityConcludeTest(); \
 }
 
 //=======Automagically Detected Files To Include=====
 #include "unity.h"
+#include "cmock.h"
 #include <setjmp.h>
 #include <stdio.h>
+#include "mock_Timer.h"
 
 int GlobalExpectCount;
 int GlobalVerifyOrder;
@@ -32,14 +37,37 @@ extern void setUp(void);
 extern void tearDown(void);
 extern void test_getButton_if_input_the_button_should_return_button_state(void);
 extern void test_turnLed_should_turn_on_or_off_for_selected_LED(void);
-extern void test_testing(void);
+extern void test_state_RELEASE_when_button_pressed_should_on_LED_and_change_state(void);
+extern void test_state_RELEASE_when_button_not_pressed_should_do_nothing(void);
+extern void test_state_PRESSED_ON_when_button_not_pressed_should_change_state(void);
+extern void test_state_PRESSED_ON_when_timer_expired_should_turn_off_led_restart_timer_and_change_state(void);
 
+
+//=======Mock Management=====
+static void CMock_Init(void)
+{
+  GlobalExpectCount = 0;
+  GlobalVerifyOrder = 0;
+  GlobalOrderError = NULL;
+  mock_Timer_Init();
+}
+static void CMock_Verify(void)
+{
+  mock_Timer_Verify();
+}
+static void CMock_Destroy(void)
+{
+  mock_Timer_Destroy();
+}
 
 //=======Test Reset Option=====
 void resetTest(void);
 void resetTest(void)
 {
+  CMock_Verify();
+  CMock_Destroy();
   tearDown();
+  CMock_Init();
   setUp();
 }
 
@@ -48,9 +76,13 @@ void resetTest(void)
 int main(void)
 {
   UnityBegin("test_State.c");
-  RUN_TEST(test_getButton_if_input_the_button_should_return_button_state, 22);
-  RUN_TEST(test_turnLed_should_turn_on_or_off_for_selected_LED, 31);
-  RUN_TEST(test_testing, 40);
+  RUN_TEST(test_getButton_if_input_the_button_should_return_button_state, 24);
+  RUN_TEST(test_turnLed_should_turn_on_or_off_for_selected_LED, 33);
+  RUN_TEST(test_state_RELEASE_when_button_pressed_should_on_LED_and_change_state, 42);
+  RUN_TEST(test_state_RELEASE_when_button_not_pressed_should_do_nothing, 60);
+  RUN_TEST(test_state_PRESSED_ON_when_button_not_pressed_should_change_state, 78);
+  RUN_TEST(test_state_PRESSED_ON_when_timer_expired_should_turn_off_led_restart_timer_and_change_state, 95);
 
+  CMock_Guts_MemFreeFinal();
   return (UnityEnd());
 }
